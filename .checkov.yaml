@@ -2,4 +2,10 @@ framework:
   - terraform
 compact: true
 quiet: true
-skip-check: []
+skip-check:
+  - CKV_AZURE_59    # El sitio web estático debe ser público por diseño; bloquear el acceso público lo dejaría inaccesible
+  - CKV2_AZURE_33   # Un endpoint privado haría el sitio inaccesible desde Internet y exige VNet y DNS privado (costo y complejidad)
+  - CKV2_AZURE_1    # El contenido es un index.html público, no sensible; la clave de Microsoft basta y CMK exige Key Vault con costo extra
+  - CKV_AZURE_206   # El sitio se puede recrear desde Git en minutos; la replicación GRS/ZRS duplica el costo sin beneficio aquí
+  - CKV_AZURE_33    # La cuenta no usa el servicio de colas (Queue), así que registrar su actividad no aporta información
+  - CKV2_AZURE_40   # Terraform sube index.html al contenedor $web con la clave de cuenta; deshabilitarla rompe el despliegue (Pregunta 5)
